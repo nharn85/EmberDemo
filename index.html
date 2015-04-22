@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>SAMOCA - San Angelico Museum of Contemporary Art</title>
+  <link rel="stylesheet" href="css/normalize.css">
+  <link rel="stylesheet" href="css/bootstrap.min.css">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!--
+    DEFAULT APPLICATION TEMPLATE: This gets rendered in a browser as soon as "Ember.Application.create()" happens.
+  -->
+
+  <script type="text/x-handlebars">
+    <div class="container">
+      <header class="headerClass">
+        <h1 class="logo">
+          {{#link-to "index" class="homepageLinkClass"}}
+            SAMOCA - San Angelico Museum of Contemporary Art
+          {{/link-to}}
+        </h1>
+      </header>
+      <nav class="navClass centerText">
+      <!-- The nav in this section is replacing the standard <a href="#">About</a> link.-->
+        {{#link-to "about" class="btn btn-primary"}}About{{/link-to}}
+        {{#link-to "collections" class="btn btn-primary"}}Collections{{/link-to}}
+        {{#link-to "exhibits" class="btn btn-primary"}}Exhibits{{/link-to}}
+        {{#link-to "notes" class="btn btn-primary"}}Visitor Notes{{/link-to}}
+          <!--<a href="#" class="btn btn-primary">About</a>-->
+          <!--<a href="#" class="btn btn-primary">Collections</a>-->
+          <!--<a href="#" class="btn btn-primary">Exhibits</a>-->
+          <!--<a href="#" class="btn btn-primary">Visitor Notes</a>-->
+      </nav>
+
+        <!-- outlet will display the clicked template -->
+      <main class="mainClass cf">{{outlet}}</main>
+      <footer class="footerClass centerText cf">
+        <small>&copy; San Angelico Museum of Contemporary Art, 123 Main Street, Ventura, CA 12345 (800)555-1212</small>
+      </footer>
+    </div>
+  </script>
+
+  <!--
+    The app's entire page structure is above this comment line.
+    All of our single-page templates are below this comment line.
+  -->
+
+  <!--
+    ====================================================
+    "HOME" PAGE TEMPLATE: displays the Home page content 
+    ====================================================
+  -->
+  <script type="text/x-handlebars" id="index">
+  <!--<script type="text/x-handlebars" data-template-name="index">-->
+    <section id="home" class="pageClass clearfix">
+      <h2 class="homepageHeader">Welcome to Samoca</h2>
+      <div class="homePageDiv vertAlign">
+        <img src="images/hero.jpg" class="imageBorder" />
+      </div>
+      <div class="homePageDiv homePageCopy">
+        SAMOCA (San Angelico Museum of Contemporary Art) is a museum with a focus on modern art from the last 75 years. Since its inception in 1973, the museum has been the leader in representing modern contemporary art and design. The museum is located in the heart of Ventura, California, ninety miles north of Los Angeles.
+          <br><br>
+          <!--this link helper is to link to the full about page as a read more-->
+          {{#link-to "about"}}<strong>learn more &raquo;</strong>{{/link-to}}
+      </div>
+    </section>
+  </script>
+
+  <!--
+    =================================================
+    "ABOUT" PAGE TEMPLATE: displays the About content 
+    =================================================
+  -->
+
+  <script type="text/x-handlebars" data-template-name="about">
+  <!--<script type="text/x-handlebars" id="about">-->
+    <section id="about" class="pageClass">
+      <h2>About Us</h2>
+      <h3 class="aboutTagLine">Celebrating the Best of Modern Art</h3>
+      <img src="images/about-hero.jpg" alt="About SAMOCA" align="left" class="aboutImage imageBorder">
+      <p>
+        SAMOCA (San Angelico Museum of Contemporary Art) is a museum with a focus on modern art from the last 75 years. Since its inception in 1973, the museum has been the leader in representing modern contemporary art and design. The museum is located in the heart of Ventura, California, ninety miles north of Los Angeles.
+      </p>
+      <h3>An Introduction</h3>
+      <p>
+        SAMOCA was established in honor of Saint Angelico, and tasked with promoting the enrichment and furtherment of the arts. It hosts a creative mixture of visual and performing arts alongside music and crafts, suitable for the entire family. The museum also spotlights the unique talents and accomplishments of up-and-coming artists found within the diverse and daring California community and beyond.
+      </p>
+      <p>
+        Our collections are designed to highlight the importance of contemporary art within modern society. Important influences, such as popular music, cinema, and current world events, are reflected in our halls. Through our diverse collections, events, and with the support of our patrons and volunteers, the museum helps to promote the importance of modern art around the world.
+      </p>
+    </section>
+  </script>
+
+  <!--
+    ============================================================
+    "COLLECTIONS" PAGE/TEMPLATE: displays the Collection content 
+    ============================================================
+  -->
+
+  <!-- component MUST have the format of id="components/single-collection" ex.
+  id="component/blah-blah" you must have 2 works sperated by a dash-->
+
+    <script type="text/x-handlebars" id="components/single-collection">
+      <h3>{{title}}</h3>
+      <img {{bind-attr src=image}} class="collectionsImage" align="left">
+      {{yield}} <!--yield copys all things from template below-->
+    </script>
+
+    <script type="text/x-handlebars" id="collections">
+      <section class="pageClass clearfix">
+        <h2>Collections</h2>
+          <!-- #each works like a for each loop-->
+        {{#each}}
+          <!--custom component-name data from model-->
+          {{#single-collection title=title image=image}}
+            {{copy}}
+          {{/single-collection}}
+        {{/each}}
+      </section>
+    </script>
+
+
+  <!--
+    ===================================================
+    "EXHIBITS" PAGE/TEMPLATE: displays all the exhibits 
+    ===================================================
+  -->
+
+  <script type="text/x-handlebars" id="exhibits">
+    <div class="pageClass">
+      <section class="exhibitSection cf">
+        <h2>Exhibits</h2>
+        <div>
+            <!-- the totalExhibits handlebar is derived from App.ExhibitsController line 72 -->
+          There are currently <strong><em>{{totalExhibits}}</em></strong> exhibits running at SAMOCA...visit us and see them all!!!
+        </div>
+        <ul class="singleExhibitList cf">
+        {{#each}}
+          <li class="singleExhibitListItem">
+            <h3>
+                <!--this is link to the subroute of exhibit, App.ExhibitRoute line 57
+                this will not refresh the page, it will just load in the outlet section when clicked-->
+              {{#link-to 'exhibit' this}}
+                {{title}}
+              {{/link-to}}
+            </h3>
+            <span><em>by <strong>{{artist_name}}</strong></em></span>
+          </li>
+        {{/each}}
+        </ul>
+        <div>{{outlet}}</div>
+      </section>
+    </div>
+  </script>
+
+
+  <!--
+    =========================================================
+    "EXHIBIT" PAGE/TEMPLATE: lists only one exhibit at a time
+    =========================================================
+  -->
+
+  <script type="text/x-handlebars" id="exhibit">
+    <article class="singleExhibitContent">
+    <h2>{{exhibitTitle}}</h2>
+      <p>
+          <!--When using a value in a HTML tag (such as src) you need to bind the element
+          to the controller-->
+        <img {{bind-attr src=image}} class="singleExhibitImage imageBorder" align="left" />
+        {{exhibit_info}}
+      </p>
+    </article>
+  </script>
+
+  <!--
+    ===============================================
+    "NOTE" PAGE/TEMPLATE: displays the Note content
+    ===============================================
+  -->
+
+  <script type="text/x-handlebars" id="notes">
+    <article class="pageClass">
+      <h2>Visitor Notes</h2>
+      {{textarea placeholder="create a new note" value=newNote rows=10 cols=50}}
+      <p class="btnVolunteerParagraph">
+          <!--this buttons action is newNote, in App.NotesController line 100 -->
+        <button {{action "newNote"}} class="btn btn-info">Save this note</button>
+      </p>
+
+        <!--for each note-->
+      {{#each itemController="note"}}
+        <div class="singleEntry">
+            {{#if isEditing}} <!-- false by default -->
+                  <p><strong>EDIT THIS NOTE...</strong></p>
+                  {{update-note value=copy}}
+                  <p class="btnVolunteerParagraph">
+                    <button {{action "saveNewNote"}} class="btn btn-info">Save this note</button>
+                  </p>
+            {{else}}
+                  {{copy}}
+                  <hr/>
+                  <p class="btnVolunteerParagraph">
+                      <!--this buttons action is editNote, in App.NoteController line 119 -->
+                    <button {{action "editNote"}} class="btn btn-info">Edit this note</button>
+                      <!--this buttons action is deleteNote, in App.NoteController line 131 -->
+                      <button {{action "deleteNote"}} class="btn btn-info">Delete this note</button>
+                  </p>
+            {{/if}}
+        </div>
+      {{/each}}
+
+
+    </article>
+  </script>
+  
+  <script src="js/libs/jquery-1.10.2.js"></script>
+  <script src="js/libs/handlebars-1.1.2.js"></script>
+  <script src="js/libs/ember.min.js"></script>
+  <script src="js/libs/ember-data.js"></script>
+  <script src="js/libs/localstorage_adapter.js"></script>
+  <script src="js/app.js"></script>
+
+</body>
+</html>
